@@ -1,0 +1,35 @@
+<?php
+
+namespace Dao;
+
+use PDO;
+
+class Connection {
+
+    const SERVER_NAME = 'localhost';
+    const DB_NAME = 'veiculos_cindapa';
+    const USERNAME = 'root';
+    const PASSOWRD = '';
+    
+    private $connection = null;
+
+    function __construct() {
+        $this->connection = new PDO ('mysql:host='.self::SERVER_NAME.';dbname='.self::DB_NAME, self::USERNAME, self::PASSOWRD);
+    }
+
+	function selectOne(string $query) {
+		$stmt = $this->connection->query($query);
+		return $stmt->fetch(\PDO::FETCH_ASSOC);
+	}
+
+	function selectAll(string $query) {
+		$stmt = $this->connection->query($query);
+		return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+	}
+
+	function query(string $query) {
+		$this->connection->query($query);
+		return $this->connection->lastInsertId();
+	}
+
+}

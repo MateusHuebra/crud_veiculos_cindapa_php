@@ -1,0 +1,117 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+input {
+    margin-top: 7px;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.item {
+    width: 150px;
+    height: 150px;
+}
+
+.alert {
+    color: red;
+    margin-top: 5px;
+}
+
+.button-container {
+    display: flex;
+    /* align-items: flex-end; */
+    justify-content: flex-end;
+}
+
+.button {
+    border: outset;
+    background-color:#add8e6;
+    border-radius: 5px;
+    padding: 2px 5px 2px 5px;
+    flex-shrink: initial;
+}
+
+.button a {
+    color: black;
+    text-decoration: none;
+}
+
+.button a:hover {
+    color: rgb(70, 70, 70);
+    text-decoration: none;
+}
+
+.button a:active {
+    color:  rgb(150, 150, 150);
+    text-decoration: none;
+}
+
+.table-button {
+    border: solid 2px;
+    background-color:#add8e6;
+    border-radius: 10px;
+    padding: 2px 2px 2px 5px;
+}
+
+.tb-red {
+    background-color: rgb(211, 50, 50);
+}
+
+.table-button a {
+    color: black;
+    text-decoration: none;
+}
+
+.table-button a:hover {
+    color: rgb(70, 70, 70);
+    text-decoration: none;
+}
+
+.table-button a:active {
+    color:  rgb(150, 150, 150);
+    text-decoration: none;
+}
+
+table {
+    border: 2px solid black;
+}
+
+th, td {
+    border: 1px solid black;
+}
+
+th {
+    background-color:#add8e6;
+;
+}
+
+th, td {
+    padding: 5px;
+}
+
+table tr:nth-child(even) td{
+    background-color:#e4e4e4;
+}
+
+td span {
+    border: 2px groove;
+    background-color:#eaf4f7;
+    border-radius: 25px;
+    padding: 2px 5px 2px 5px;
+}
+
+td span:not(:first-child) {
+    margin-left: 5px;
+}
+
+input {
+    font-size: medium;
+    padding: 5px;
+    border-radius: 5px;
+}
