@@ -6,7 +6,7 @@ use Dao\Vehicle;
 
 class Validations {
 
-    static function listVehicleValidationErrors(array $vehicle) {
+    static function listVehicleValidationErrors(array $vehicle) : bool {
         $errors = [];
         $vehicleDao = new Vehicle();
         /*

@@ -15,7 +15,7 @@ class SessionMessages {
         return false;
     }
 
-    static function getAll() {
+    static function getAll() : array {
         return $_SESSION['messages'];
     }
 

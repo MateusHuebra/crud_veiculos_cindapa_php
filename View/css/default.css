@@ -61,7 +61,7 @@ input {
 }
 
 .tb-red {
-    background-color: rgb(211, 50, 50);
+    background-color: rgb(226, 80, 80);
 }
 
 .table-button a {
@@ -79,8 +79,14 @@ input {
     text-decoration: none;
 }
 
+.tb-page {
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
 table {
     border: 2px solid black;
+    margin-bottom: 10px;
 }
 
 th, td {

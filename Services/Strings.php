@@ -13,7 +13,7 @@ class Strings {
         'distant_travels' => 'para longas distâncias'
     ];
 
-    static function get(string $stringKey) {
+    static function get(string $stringKey) : string {
         return self::STRINGS[$stringKey];
     }
 

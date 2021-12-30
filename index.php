@@ -15,7 +15,10 @@ if(isset($requestUri[2])) {
 
 $connection = new Dao\Connection();
 
-if(!file_exists(str_replace('\\', '/', $className).'.php') || !in_array($methodName, get_class_methods($className))) {
+$controllers = array_diff(scandir('Controller'), ['..', '.', 'Controller.php', 'LoggedPageController.php']);
+$controllers = array_map('strtolower', $controllers);
+
+if(!in_array(strtolower($requestUri[1]).'.php', $controllers) || !in_array($methodName, get_class_methods($className))) {
     $className = 'Controller\\PageNotFound';
     $methodName = 'index';
     $controller = new $className();

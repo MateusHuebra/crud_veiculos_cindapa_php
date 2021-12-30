@@ -62,6 +62,42 @@
             </tbody>
         </table>
     </div>
+    <div>
+        <?php
+            $last = ceil($count/10);
+
+            $next = $page+1;
+            $previous = $page-1;
+            if($next>$last) {
+                $next = $last;
+            }
+            if($previous<1) {
+                $previous = 1;
+            }
+        ?>
+        <span class="table-button tb-page">
+            <a href="/home?page=1">primeira</a>
+        </span>
+        <span class="table-button tb-page">
+            <a href="/home?page=<?php echo $previous; ?>">anterior</a>
+        </span>
+        <span style="margin: 0px 5px 0px 8px;">
+        <?php
+            $min = ((($page-1)*10)+1);
+            $max = $min+9;
+            if($max>$count) {
+                $max = $count;
+            }
+            echo 'Veículos: '.$min.'-'.$max.' de '.$count;
+        ?>
+        </span>
+        <span class="table-button tb-page">
+            <a href="/home?page=<?php echo $next; ?>">próxima</a>
+        </span>
+        <span class="table-button tb-page">
+            <a href="/home?page=<?php echo $last; ?>">última</a>
+        </span>
+    </div>
     
 </body>
 </html>

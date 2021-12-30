@@ -20,6 +20,13 @@ class Vehicle extends Dao {
         return $vehicles;
     }
 
+    function getCount() {
+        $query = "SELECT count(id) as 'count' FROM vehicles";
+        $connection = $this->getConnection();
+        $count = $connection->selectOne($query)['count'];
+        return $count;
+    }
+
     function getById(int $id) {
         $query = "SELECT v.*, GROUP_CONCAT(vh.characteristic) as characteristics FROM vehicles v
             LEFT JOIN vehicle_characteristics vh ON v.id = vh.vehicle_id
@@ -84,8 +91,11 @@ class Vehicle extends Dao {
                 `year` = '.$this->parseIntForQuery($vehicle['year']).',
                 plate = '.$this->parseStringForQuery($vehicle['plate']);
         $connection = $this->getConnection();
-        $vehicle['id'] = $connection->query($query);
-
+        $lastInsertedId = $connection->query($query);
+        if($lastInsertedId!=0) {
+            $vehicle['id'] = $lastInsertedId;
+        }
+        
         if(!empty($vehicle['characteristics'])) {
             $vh = new VehicleCharacteristic();
             $vh->deleteByVehicleId($vehicle['id']);
