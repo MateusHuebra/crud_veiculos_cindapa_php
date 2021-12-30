@@ -15,7 +15,7 @@ class Home extends LoggedPageController {
         $offset = ($page-1)*10;
 
         $vehicleDao = new Vehicle();
-        $vehicles = $vehicleDao->get($offset);
+        $vehicles = $vehicleDao->get($offset)??[];
         $count = $vehicleDao->getCount();
 
         if($offset>=$count && $count!=0) {
