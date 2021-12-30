@@ -12,7 +12,7 @@ class Vehicle {
     private $plate;
     private $characteristics;
 
-    function __construct(int $id = null, string $chassis_number = null, string $brand = null, string $model = null, int $year = null, string $plate = null, array $characteristics = []) {
+    function __construct($id = null, $chassis_number = null, $brand = null, $model = null, $year = null, $plate = null, array $characteristics = []) {
         $this->id = $id;
         $this->chassis_number = $chassis_number;
         $this->brand = $brand;
@@ -44,22 +44,22 @@ class Vehicle {
         return $this->characteristics;
     }
 
-    function setId(int $id) {
+    function setId($id) {
         $this->id = $id;
     }
-    function setChassisNumber(string $chassisNumber) {
+    function setChassisNumber($chassisNumber) {
         $this->chassis_number = $chassisNumber;
     }
-    function setBrand(string $brand) {
+    function setBrand($brand) {
         $this->brand = $brand;
     }
-    function setModel(string $model) {
+    function setModel($model) {
         $this->model = $model;
     }
-    function setYear(int $year) {
+    function setYear($year) {
         $this->year = $year;
     }
-    function setPlate(string $plate) {
+    function setPlate($plate) {
         $this->plate = $plate;
     }
     function setCharacteristics(array $characteristics) {
