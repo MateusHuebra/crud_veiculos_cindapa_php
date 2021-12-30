@@ -2,12 +2,20 @@
 
 namespace Dao;
 
+use Model\VehicleCharacteristic as ModelVehicleCharacteristic;
+
 class VehicleCharacteristic extends Dao {
 
-    function getByVehicleId(int $id) {
-        $query = "SELECT * FROM vehicle_characteristics";
+    function getByVehicleId(int $id) : array {
+        $query = "SELECT * FROM vehicle_characteristics
+            WHERE vehicle_id = $id";
         $connection = $this->getConnection();
-        return $connection->selectAll($query);
+        $queryResults = $connection->selectAll($query);
+        $vehicleCharacteristics = [];
+        foreach($queryResults as $queryResult) {
+            $vehicleCharacteristics[] = $this->createModel($queryResult);
+        }
+        return $vehicleCharacteristics;
     }
 
     function deleteByVehicleId(int $id) {
@@ -17,12 +25,20 @@ class VehicleCharacteristic extends Dao {
         return $connection->query($query);
     }
 
-    function save(array $vehicleCharacteristic) {
+    function save(ModelVehicleCharacteristic $vehicleCharacteristic) {
         $query = "INSERT INTO vehicle_characteristics (vehicle_id, characteristic)
-            VALUES (".$vehicleCharacteristic['vehicle_id']
-                .', '.$this->parseStringForQuery($vehicleCharacteristic['characteristic']).")";
+            VALUES (".$vehicleCharacteristic->getVehicleId()
+                .', '.$this->parseStringForQuery($vehicleCharacteristic->getCharacteristic()).")";
         $connection = $this->getConnection();
         $connection->query($query);
+    }
+
+    private function createModel($queryResult) {
+        return new ModelVehicleCharacteristic(
+            $queryResult['id'],
+            $queryResult['vehicle_id'],
+            $queryResult['characteristic']
+        );
     }
 
 }

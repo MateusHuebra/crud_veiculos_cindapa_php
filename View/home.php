@@ -34,25 +34,25 @@
                     foreach($vehicles as $vehicle) {
                 ?>
                     <tr>
-                        <td scope="row"><?php echo $vehicle['chassis_number']; ?></td>
-                        <td><?php echo $vehicle['brand']; ?></td>
-                        <td><?php echo $vehicle['model']; ?></td>
-                        <td><?php echo $vehicle['year']; ?></td>
-                        <td><?php echo $vehicle['plate']; ?></td>
+                        <td scope="row"><?php echo $vehicle->getChassisNumber(); ?></td>
+                        <td><?php echo $vehicle->getBrand(); ?></td>
+                        <td><?php echo $vehicle->getModel(); ?></td>
+                        <td><?php echo $vehicle->getYear(); ?></td>
+                        <td><?php echo $vehicle->getPlate(); ?></td>
                         <td><?php
-                            foreach ($vehicle['characteristics'] as $characteristic) {
-                                echo '<span>'.\Services\Strings::get($characteristic).'</span>';
+                            foreach ($vehicle->getCharacteristics() as $characteristic) {
+                                echo '<span>'.\Services\Strings::get($characteristic->getCharacteristic()).'</span>';
                             }
                         ?></td>
                         <td>
                             <span class="table-button">
-                                <a href="/vehicle/edit?id=<?php echo $vehicle['id']; ?>">Editar</a>
+                                <a href="/vehicle/edit?id=<?php echo $vehicle->getId(); ?>">Editar</a>
                             </span>
                             <span class="table-button tb-red">
                                 <!--
-                                <a href="/vehicle/delete?id=<?php echo $vehicle['id']; ?>">Deletar</a>
+                                <a href="/vehicle/delete?id=<?php echo $vehicle->getId(); ?>">Deletar</a>
                                 -->  
-                                <a onclick='deleteDialog(<?php echo json_encode($vehicle); ?>)' href="#">Deletar</a>
+                                <a onclick='deleteDialog(<?php echo $vehicle->toJson(); ?>)' href="#">Deletar</a>
                             </span>
                         </td>
                     </tr> 

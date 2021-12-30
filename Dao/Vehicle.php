@@ -2,6 +2,9 @@
 
 namespace Dao;
 
+use Dao\VehicleCharacteristic as DaoVehicleCharacteristic;
+use Model\Vehicle as ModelVehicle;
+
 class Vehicle extends Dao {
 
     function get(int $offset = 0, int $limit = 10) {
@@ -10,13 +13,15 @@ class Vehicle extends Dao {
             GROUP BY v.id
             LIMIT $limit OFFSET $offset";
         $connection = $this->getConnection();
-        $vehicles = $connection->selectAll($query);
-        if(empty($vehicles)) {
+        $queryResults = $connection->selectAll($query);
+        if(empty($queryResults)) {
             return null;
         }
-        foreach ($vehicles as $key => $vehicle) {
-            $vehicles[$key] = $this->explodeCharacteristics($vehicle);
+        $vehicles = [];
+        foreach ($queryResults as $queryResult) {
+            $vehicles[] = $this->createModel($queryResult);
         }
+
         return $vehicles;
     }
 
@@ -33,12 +38,11 @@ class Vehicle extends Dao {
             WHERE v.id = $id
             GROUP BY v.id";
         $connection = $this->getConnection();
-        $vehicle = $connection->selectOne($query);
-        if(empty($vehicle)) {
+        $queryResult = $connection->selectOne($query);
+        if(empty($queryResult)) {
             return null;
         }
-
-        $vehicle = $this->explodeCharacteristics($vehicle);
+        $vehicle = $this->createModel($queryResult);
         
         return $vehicle;
     }
@@ -49,12 +53,12 @@ class Vehicle extends Dao {
             WHERE v.chassis_number = ".$this->parseStringForQuery($chassisNumber)."
             GROUP BY v.id";
         $connection = $this->getConnection();
-        $vehicle = $connection->selectOne($query);
-        if(empty($vehicle)) {
+        $queryResult = $connection->selectOne($query);
+        if(empty($queryResult)) {
             return null;
         }
 
-        $vehicle = $this->explodeCharacteristics($vehicle);
+        $vehicle = $this->createModel($queryResult);
 
         return $vehicle;
     }
@@ -65,65 +69,65 @@ class Vehicle extends Dao {
             WHERE v.plate = ".$this->parseStringForQuery($plate)."
             GROUP BY v.id";
         $connection = $this->getConnection();
-        $vehicle = $connection->selectOne($query);
-        if(empty($vehicle)) {
+        $queryResult = $connection->selectOne($query);
+        if(empty($queryResult)) {
             return null;
         }
 
-        $vehicle = $this->explodeCharacteristics($vehicle);
+        $vehicle = $this->createModel($queryResult);
 
         return $vehicle;
     }
 
-    function save(array $vehicle) {
+    function save(ModelVehicle $vehicle) {
         $query = "INSERT INTO vehicles (id, chassis_number, brand, model, `year`, plate)
-            VALUES (".$this->parseIntForQuery($vehicle['id']??null)
-                .', '.$this->parseStringForQuery($vehicle['chassis_number'])
-                .', '.$this->parseStringForQuery($vehicle['brand'])
-                .', '.$this->parseStringForQuery($vehicle['model'])
-                .', '.$this->parseIntForQuery($vehicle['year'])
-                .', '.$this->parseStringForQuery($vehicle['plate'])
+            VALUES (".$this->parseIntForQuery($vehicle->getId()??null)
+                .', '.$this->parseStringForQuery($vehicle->getChassisNumber())
+                .', '.$this->parseStringForQuery($vehicle->getBrand())
+                .', '.$this->parseStringForQuery($vehicle->getModel())
+                .', '.$this->parseIntForQuery($vehicle->getYear())
+                .', '.$this->parseStringForQuery($vehicle->getPlate())
             .")
             ON DUPLICATE KEY UPDATE
-                chassis_number = ".$this->parseStringForQuery($vehicle['chassis_number']).',
-                brand = '.$this->parseStringForQuery($vehicle['brand']).',
-                model = '.$this->parseStringForQuery($vehicle['model']).',
-                `year` = '.$this->parseIntForQuery($vehicle['year']).',
-                plate = '.$this->parseStringForQuery($vehicle['plate']);
+                chassis_number = ".$this->parseStringForQuery($vehicle->getChassisNumber()).',
+                brand = '.$this->parseStringForQuery($vehicle->getBrand()).',
+                model = '.$this->parseStringForQuery($vehicle->getModel()).',
+                `year` = '.$this->parseIntForQuery($vehicle->getYear()).',
+                plate = '.$this->parseStringForQuery($vehicle->getPlate());
         $connection = $this->getConnection();
         $lastInsertedId = $connection->query($query);
         if($lastInsertedId!=0) {
-            $vehicle['id'] = $lastInsertedId;
+            $vehicle->setId($lastInsertedId);
         }
         
-        if(!empty($vehicle['characteristics'])) {
-            $vh = new VehicleCharacteristic();
-            $vh->deleteByVehicleId($vehicle['id']);
-            foreach ($vehicle['characteristics'] as $characteristic) {
-                $characteristic = [
-                    'vehicle_id' => $vehicle['id'],
-                    'characteristic' => $characteristic
-                ];
+        if(!empty($vehicle->getCharacteristics())) {
+            $vh = new DaoVehicleCharacteristic();
+            $vh->deleteByVehicleId($vehicle->getId());
+            foreach ($vehicle->getCharacteristics() as $characteristic) {
+                $characteristic->setVehicleId($vehicle->getId());
                 $vh->save($characteristic);
             }
         }
     }
 
     function delete(int $id) {
-        (new VehicleCharacteristic)->deleteByVehicleId($id);
+        (new DaoVehicleCharacteristic)->deleteByVehicleId($id);
         $query = "DELETE FROM vehicles
             WHERE id = $id";
         $connection = $this->getConnection();
         return $connection->query($query);
     }
 
-    private function explodeCharacteristics(array $vehicle) : array {
-        if(!empty($vehicle['characteristics'])) {
-            $vehicle['characteristics'] = explode(',', $vehicle['characteristics']);
-        } else {
-            $vehicle['characteristics'] = [];
-        }
-        return $vehicle;
+    private function createModel($queryResult) {
+        return new ModelVehicle(
+            $queryResult['id'],
+            $queryResult['chassis_number'],
+            $queryResult['brand'],
+            $queryResult['model'],
+            $queryResult['year'],
+            $queryResult['plate'],
+            (new DaoVehicleCharacteristic)->getByVehicleId($queryResult['id'])
+        );
     }
 
 }

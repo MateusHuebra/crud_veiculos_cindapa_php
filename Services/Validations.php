@@ -3,73 +3,66 @@
 namespace Services;
 
 use Dao\Vehicle;
+use Model\Vehicle as ModelVehicle;
 
 class Validations {
 
-    static function listVehicleValidationErrors(array $vehicle) : bool {
+    static function listVehicleValidationErrors(ModelVehicle $vehicle) : bool {
         $errors = [];
         $vehicleDao = new Vehicle();
-        /*
-        'chassis_number' => 'required|size:17|unique:vehicles,chassis_number,'.$request->input('id'),
-        'brand' => 'required|min:3|max:32',
-        'model' => 'required|min:1|max:32',
-        'year' => 'required|integer|min:1769',
-        'plate' => 'required|size:7|regex:/^[A-Z]{3}[0-9]{1}[A-Z0-9]{1}[0-9]{2}$/|unique:vehicles,plate,'.$request->input('id'),
-        'number_of_characteristics' => 'integer|min:2'
-        */
 
-        if(strlen($vehicle['chassis_number'])!==17) {
+        if(strlen($vehicle->getChassisNumber())!==17) {
             $errors['chassis_number'] = 'o número do chassi deve conter 17 caracteres';
         } else if(
             (
-                !isset($vehicle['id'])
+                is_null($vehicle->getId())
                 &&
-                $vehicleDao->getByChassisNumber($vehicle['chassis_number']!=null)
+                $vehicleDao->getByChassisNumber($vehicle->getChassisNumber()!=null)
             )
             ||
             (
-                isset($vehicle['id'])
+                !is_null($vehicle->getId())
                 &&
-                $vehicleDao->getByChassisNumber($vehicle['chassis_number'])!=null
+                $vehicleDao->getByChassisNumber($vehicle->getChassisNumber())!=null
                 &&
-                $vehicleDao->getByChassisNumber($vehicle['chassis_number'])['id']!=$vehicle['id']
+                $vehicleDao->getByChassisNumber($vehicle->getChassisNumber())->getId()!=$vehicle->getId()
             )
         ) {
             $errors['chassis_number'] = 'o número do chassi já está em uso';
         }
 
-        if(strlen($vehicle['brand'])<3 || strlen($vehicle['brand'])>32) {
+        if(strlen($vehicle->getBrand())<3 || strlen($vehicle->getBrand())>32) {
             $errors['brand'] = 'a marca deve possuir entre 3 e 32 caracteres';
         }
 
-        if(strlen($vehicle['model'])<1 || strlen($vehicle['model'])>32) {
+        if(strlen($vehicle->getModel())<1 || strlen($vehicle->getModel())>32) {
             $errors['model'] = 'o modelo deve possuir entre 1 e 32 caracteres';
         }
         
-        if($vehicle['year']<1769 || $vehicle['year']>(date('Y')+1)) {
+        if($vehicle->getYear()<1769 || $vehicle->getYear()>(date('Y')+1)) {
             $errors['year'] = 'ano inválido';
         }
 
-        if(!preg_match('/^[A-Z]{3}[0-9]{1}[A-Z0-9]{1}[0-9]{2}$/', $vehicle['plate'])) {
+        if(!preg_match('/^[A-Z]{3}[0-9]{1}[A-Z0-9]{1}[0-9]{2}$/', $vehicle->getPlate())) {
             $errors['plate'] = 'formato de placa inválido';
         } else if(
             (
-                !isset($vehicle['id'])
+                is_null($vehicle->getId())
                 &&
-                $vehicleDao->getByPlate($vehicle['plate']!=null))
+                $vehicleDao->getByPlate($vehicle->getPlate()!=null))
             ||
             (
-                isset($vehicle['id'])
+                !is_null($vehicle->getId())
                 &&
-                $vehicleDao->getByPlate($vehicle['plate'])!=null
+                $vehicleDao->getByPlate($vehicle->getPlate())!=null
                 &&
-                $vehicleDao->getByPlate($vehicle['plate'])['id']!=$vehicle['id']
+                $vehicleDao->getByPlate($vehicle->getPlate())->getId()!=$vehicle->getId()
             )
         ) {
             $errors['plate'] = 'a placa já está em uso';
         }
 
-        if(count($vehicle['characteristics'])<2) {
+        if(count($vehicle->getCharacteristics())<2) {
             $errors['characteristics'] = 'escolha pelo menos duas características';
         }
 

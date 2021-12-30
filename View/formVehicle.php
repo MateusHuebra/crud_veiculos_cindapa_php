@@ -1,6 +1,6 @@
     <div>
         <input id="chassis_number" name="chassis_number" type="text" maxlength="17" placeholder="Nº Chassi"
-        value="<?php echo (isset($vehicle['chassis_number']))?($vehicle['chassis_number']):''; ?>" />
+        value="<?php echo (!is_null($vehicle->getChassisNumber()))?($vehicle->getChassisNumber()):''; ?>" />
         <div class="alert"><span>
             <?php
                 if(isset($errors['chassis_number'])) {
@@ -11,7 +11,7 @@
     </div>
     <div>
         <input id="brand" name="brand" type="text" maxlength="32" placeholder="Marca"
-        value="<?php echo (isset($vehicle['brand']))?($vehicle['brand']):''; ?>" />
+        value="<?php echo (!is_null($vehicle->getBrand()))?($vehicle->getBrand()):''; ?>" />
         <div class="alert"><span>
             <?php
                 if(isset($errors['brand'])) {
@@ -22,7 +22,7 @@
     </div>
     <div>
         <input id="model" name="model" type="text" maxlength="32" placeholder="Modelo"
-        value="<?php echo (isset($vehicle['model']))?($vehicle['model']):''; ?>" />
+        value="<?php echo (!is_null($vehicle->getModel()))?($vehicle->getModel()):''; ?>" />
         <div class="alert"><span>
             <?php
                 if(isset($errors['model'])) {
@@ -33,7 +33,7 @@
     </div>
     <div>
         <input id="year" name="year" type="number" placeholder="Ano"
-        value="<?php echo (isset($vehicle['year']))?($vehicle['year']):''; ?>" />
+        value="<?php echo (!is_null($vehicle->getYear()))?($vehicle->getYear()):''; ?>" />
         <div class="alert"><span>
             <?php
                 if(isset($errors['year'])) {
@@ -44,7 +44,7 @@
     </div>
     <div>
         <input id="plate" name="plate" type="text" maxlength="7" placeholder="Placa"
-        value="<?php echo (isset($vehicle['plate']))?($vehicle['plate']):''; ?>" />
+        value="<?php echo (!is_null($vehicle->getPlate()))?($vehicle->getPlate()):''; ?>" />
         <div class="alert"><span>
             <?php
                 if(isset($errors['plate'])) {
@@ -66,14 +66,14 @@
         </span></div>
         <div style="margin-top: 8px;">
             <input type="radio" name="characteristicsModel" id="sport" value="sport" 
-            <?php echo (isset($vehicle['characteristics']) && in_array('sport', $vehicle['characteristics']))?'checked':''; ?>>
+            <?php echo ($vehicle->hasCharacteristic('sport'))?'checked':''; ?>>
             <label for="sport">
                 Esporte
             </label>
         </div>
         <div>
             <input type="radio" name="characteristicsModel" id="classic" value="classic" 
-            <?php echo (isset($vehicle['characteristics']) && in_array('classic', $vehicle['characteristics']))?'checked':''; ?>>
+            <?php echo ($vehicle->hasCharacteristic('classic'))?'checked':''; ?>>
             <label for="classic">
                 Clássico
             </label>
@@ -81,14 +81,14 @@
 
         <div style="margin-top: 8px;">
             <input type="radio" name="characteristicsType" id="turbo" value="turbo" 
-            <?php echo (isset($vehicle['characteristics']) && in_array('turbo', $vehicle['characteristics']))?'checked':''; ?>>
+            <?php echo ($vehicle->hasCharacteristic('turbo'))?'checked':''; ?>>
             <label for="turbo">
                 Turbo
             </label>
         </div>
         <div>
             <input type="radio" name="characteristicsType" id="economic" value="economic" 
-            <?php echo (isset($vehicle['characteristics']) && in_array('economic', $vehicle['characteristics']))?'checked':''; ?>>
+            <?php echo ($vehicle->hasCharacteristic('economic'))?'checked':''; ?>>
             <label for="economic">
                 Econômico
             </label>
@@ -96,14 +96,14 @@
 
         <div style="margin-top: 8px;">
             <input type="radio" name="characteristicsDistance" id="city" value="city" 
-            <?php echo (isset($vehicle['characteristics']) && in_array('city', $vehicle['characteristics']))?'checked':''; ?>>
+            <?php echo ($vehicle->hasCharacteristic('city'))?'checked':''; ?>>
             <label for="city">
                 Para cidade
             </label>
         </div>
         <div>
             <input type="radio" name="characteristicsDistance" id="distant_travels" value="distant_travels" 
-            <?php echo (isset($vehicle['characteristics']) && in_array('distant_travels', $vehicle['characteristics']))?'checked':''; ?>>
+            <?php echo ($vehicle->hasCharacteristic('distant_travels'))?'checked':''; ?>>
             <label for="distant_travels">
                 Para longas viagens
             </label>

@@ -1,6 +1,5 @@
 
 function deleteDialog(vehicle) {
-    console.log(vehicle);
     let string = 'Tem certeza que quer deletar '+vehicle.brand+' '+vehicle.model+' de chassi número '+vehicle.chassis_number+'?';
     if (confirm(string)) {
         deleteVehicle(vehicle.id);

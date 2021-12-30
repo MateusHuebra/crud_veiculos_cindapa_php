@@ -3,16 +3,22 @@
 namespace Controller;
 
 use Dao\Vehicle as DaoVehicle;
+use Model\Vehicle as ModelVehicle;
+use Model\VehicleCharacteristic;
 use Services\SessionMessages;
 use Services\Validations;
 
 class Vehicle extends LoggedPageController {
 
     function add() {
+        $vehicle = SessionMessages::get('vehicle');
+        if($vehicle===false) {
+            $vehicle = new ModelVehicle();
+        }
         $this->view('addVehicle');
         $this->view('formVehicle', [
             'errors' => SessionMessages::get('errors'),
-            'vehicle' => SessionMessages::get('vehicle')
+            'vehicle' => $vehicle
         ]);
     }
 
@@ -32,24 +38,36 @@ class Vehicle extends LoggedPageController {
     }
 
     function save() {
-        $vehicle = [];
+        $vehicle = new ModelVehicle();
         if(isset($_POST['id'])) {
-            $vehicle['id'] = $_POST['id'];
+            $vehicle->setId($_POST['id']);
         }
-        $vehicle['chassis_number'] = $_POST['chassis_number'];
-        $vehicle['brand'] = $_POST['brand'];
-        $vehicle['model'] = $_POST['model'];
-        $vehicle['year'] = $_POST['year'];
-        $vehicle['plate'] = $_POST['plate'];
+        $vehicle->setChassisNumber($_POST['chassis_number']);
+        $vehicle->setBrand($_POST['brand']);
+        $vehicle->setModel($_POST['model']);
+        $vehicle->setYear($_POST['year']);
+        $vehicle->setPlate($_POST['plate']);
         
         if(isset($_POST['characteristicsModel'])) {
-            $vehicle['characteristics'][] = $_POST['characteristicsModel'];
+            $vehicle->setCharacteristic(new VehicleCharacteristic(
+                null,
+                $vehicle->getId(),
+                $_POST['characteristicsModel']
+            ));
         }
         if(isset($_POST['characteristicsType'])) {
-            $vehicle['characteristics'][] = $_POST['characteristicsType'];
+            $vehicle->setCharacteristic(new VehicleCharacteristic(
+                null,
+                $vehicle->getId(),
+                $_POST['characteristicsType']
+            ));
         }
         if(isset($_POST['characteristicsDistance'])) {
-            $vehicle['characteristics'][] = $_POST['characteristicsDistance'];
+            $vehicle->setCharacteristic(new VehicleCharacteristic(
+                null,
+                $vehicle->getId(),
+                $_POST['characteristicsDistance']
+            ));
         }
 
         if(Validations::listVehicleValidationErrors($vehicle)) {
