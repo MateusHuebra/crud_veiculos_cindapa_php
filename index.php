@@ -6,6 +6,9 @@ spl_autoload_register(function ($class_name) {
 
 $requestUri = explode('?', $_SERVER['REQUEST_URI']);
 $requestUri = explode('/', $requestUri[0]);
+if(empty($requestUri[1])) {
+	$requestUri[1] = 'Home';
+}
 $className = 'Controller\\'.ucfirst($requestUri[1]);
 if(isset($requestUri[2])) {
 	$methodName = $requestUri[2];
