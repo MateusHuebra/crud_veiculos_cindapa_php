@@ -21,6 +21,7 @@ input {
 .alert {
     color: red;
     margin-top: 5px;
+    font-size: small;
 }
 
 .button-container {

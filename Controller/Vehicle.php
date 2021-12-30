@@ -3,23 +3,31 @@
 namespace Controller;
 
 use Dao\Vehicle as DaoVehicle;
+use Services\SessionMessages;
 use Services\Validations;
 
 class Vehicle extends LoggedPageController {
 
     function add() {
         $this->view('addVehicle');
-        $this->view('formVehicle');
+        $this->view('formVehicle', [
+            'errors' => SessionMessages::get('errors'),
+            'vehicle' => SessionMessages::get('vehicle')
+        ]);
     }
 
     function edit() {
-        $vehicle = (new DaoVehicle)->getById($_GET['id']);
+        $vehicle = SessionMessages::get('vehicle');
+        if($vehicle===false) {
+            $vehicle = (new DaoVehicle)->getById($_GET['id']);
+        }
         if(empty($vehicle)) {
             $this->redirect('home');
         }
         $this->view('editVehicle');
         $this->view('formVehicle', [
-            'vehicle' => $vehicle
+            'vehicle' => $vehicle,
+            'errors' => SessionMessages::get('errors')
         ]);
     }
 
@@ -45,6 +53,7 @@ class Vehicle extends LoggedPageController {
         }
 
         if(Validations::listVehicleValidationErrors($vehicle)) {
+            SessionMessages::set('vehicle', $vehicle);
             if(isset($_POST['id'])) {
                 $this->redirect('vehicle/edit?id='.$_POST['id']);
             } else {

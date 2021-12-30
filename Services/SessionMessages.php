@@ -4,12 +4,15 @@ namespace Services;
 
 class SessionMessages {
 
-    static function set(array $data) {
-        $_SESSION['messages'] = $data;
+    static function set(string $key, $data) {
+        $_SESSION['messages'][$key] = $data;
     }
 
     static function get($key) {
-        return $_SESSION['messages'][$key];
+        if(isset($_SESSION['messages'][$key])) {
+            return $_SESSION['messages'][$key];
+        }
+        return false;
     }
 
     static function getAll() {
