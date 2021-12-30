@@ -17,7 +17,7 @@
                 <a href="/vehicle/add">Adicionar Veículo</a>
             </h4>
         </div>
-        <table class="table">
+        <table <?php echo (!$count>0)?'hidden':''; ?> class="table">
             <thead class="table-header">
                 <tr>
                 <th scope="col">Nº Chassi</th>
@@ -62,6 +62,9 @@
             </tbody>
         </table>
     </div>
+    <?php
+        if($count>0) {
+    ?>
     <div>
         <?php
             $last = ceil($count/10);
@@ -98,6 +101,8 @@
             <a href="/home?page=<?php echo $last; ?>">última</a>
         </span>
     </div>
-    
+    <?php
+        }
+    ?>
 </body>
 </html>

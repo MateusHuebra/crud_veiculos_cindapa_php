@@ -18,7 +18,7 @@ class Home extends LoggedPageController {
         $vehicles = $vehicleDao->get($offset);
         $count = $vehicleDao->getCount();
 
-        if($offset>=$count) {
+        if($offset>=$count && $count!=0) {
             $this->redirect('home');
         }
         
